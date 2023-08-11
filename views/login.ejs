@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <link rel="stylesheet" href="/styles/signup.css">
+</head>
+<body>
+      <div class="signup-main">
+            <div class="signup-left">
+                  <div class="signup-left-top">
+                        <h2><a href="/">Shopping App</a></h2>
+                  </div>
+                  <div class="signup-left-bottom">
+                        <h6>Sign Up</h6>
+                        <p>Sign up to get the best deals </p>
+                        <a href="/users/signup">SignUp</a>
+                  </div>
+            </div>
+
+            <div class="signup-right">
+                  <h6>Login to Account</h6>
+                  <form action="/users/login" method="post">
+                        <input name="username" placeholder="username"/>
+                        <input name="password" type="password" placeholder="password"/>
+                        <input type="submit" id="signup-submit">
+                  </form>
+                  <a href="/users/forgotPassword" id="forgotPassword">Forgot Password?</a>
+                  <% if (error) { %>
+                        <p>Error: <%= error %></p>
+                  <% } %>
+            </div>
+      </div>
+      
+</body>
+</html>

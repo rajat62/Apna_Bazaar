@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <link rel="stylesheet" href="/styles/header.css">
+</head>
+<body>
+      <div class="header header-guest">
+            <h2>Shopping App</h2>
+            <ul id="header-guest-ul">
+                  <select id="categorySelect" name="category">
+                        <option value="" disabled selected>Select a category</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="household">Household</option>
+                    </select>
+                  <div id="user-div-top">
+                        <img src="/<%= profile %>"  id="user-icon"/>
+                        <p><%= username%></p>
+                  </div>
+                  <img src="/images/cart-icon.png" id="user-icon"/> 
+                  <a id="logoutLink">Logout</a>
+            </ul>
+      </div>
+      <script>
+            const categorySelect = document.getElementById('categorySelect');
+        
+            categorySelect.addEventListener('change', function() {
+                const selectedCategory = categorySelect.value;
+                console.log('Selected category:', selectedCategory);
+            });
+
+            const logoutLink = document.getElementById('logoutLink');
+
+            const handleLogout = async () => {
+                  try {
+                        const response = await fetch("/users/logout", {
+                        method: 'POST' 
+                        });
+                        if (response.ok) {
+                              window.location.href = "/"; 
+                        } else {
+                              console.error("Logout failed");
+                        }
+                  } catch (error) {
+                        console.error("An error occurred:", error);
+                  }
+            };
+
+            logoutLink.addEventListener('click', (event) => {
+                  event.preventDefault();
+                  handleLogout();
+            });
+        </script>
+</body>
+</html>

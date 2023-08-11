@@ -1,0 +1,103 @@
+*{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+}
+.product-main{
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+}
+.featured{
+      width: 100%;
+      padding: 1.8rem 0;
+      background-color: blanchedalmond;
+      display: flex;
+      gap: 5rem;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+}
+.featured button{
+      padding: .4rem 1rem;
+      font-size: 1.2rem;
+      border-radius: 1.2rem;
+      border: none;
+      background-color: rgb(124, 234, 163);
+      cursor: pointer;
+}
+.featured button:hover{
+      color: white;
+}
+
+.single-product img{
+      width: 300px;
+      height: 300px;
+      object-fit: contain;
+}
+.all-products{
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 2rem;
+      padding:  2rem 0;
+}
+.product-information{
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .8rem;
+      font-size: .8rem;
+}
+.product-information h6{
+      font-size: 1.3rem;
+}
+.product-information a{
+      background-color: grey;
+      color: white;
+      padding: .5rem .8rem;
+      border-radius: 1.2rem;
+}
+.load-more{
+      display: flex;
+      justify-content: center;
+      padding-bottom: 3rem;
+}
+.load-more button{
+      border: none;
+      background-color: rgb(124, 234, 163);
+      color: white;
+      padding: .5rem .8rem;
+      border-radius: 1.2rem;
+      cursor: pointer;
+}
+.load-more button:hover{
+      border: 2px solid rgb(124, 234, 163);
+      background-color: white;
+      color: rgb(124, 234, 163);
+}
+.showPopup{
+      position: absolute;
+      background-color: grey;
+      width: 400px;
+      height: 400px;
+      top: 40%;
+      left: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.6rem;
+      color: white;
+}
+.clearpopup{
+      position: absolute;
+      top: 2%;
+      right: 2%;
+      color: red;
+      background-color: white;
+      padding: .8rem 1.2rem;
+      border-radius: 50%;
+      cursor: pointer;
+}

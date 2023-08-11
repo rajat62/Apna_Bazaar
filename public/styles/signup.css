@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+*{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Varela Round', sans-serif;
+}
+.signup-main{
+      padding: 0;
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: row;
+}
+.signup-left{
+      width: 50%;
+      background-color: rgb(254, 127, 65, .8);
+      display: flex;
+      flex-direction: column;
+}
+.signup-left-top{
+      height: 10%;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      padding-left: 2rem;
+}
+.signup-left-top a{
+      cursor: pointer;
+      text-decoration: none;
+      color: black;
+}
+.signup-left-bottom{
+      height: 90%;
+      font-size: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+}
+.signup-left-bottom h6{
+      font-size: 1.8rem;
+}
+.signup-left-bottom a{
+      font-size: 1.2rem;
+      text-decoration: none;
+      padding: 1rem 1.5rem;
+      border: 2px solid white;
+      color: white;
+      border-radius: 1.2rem;
+}
+.signup-left-bottom a:hover{
+      background-color: white;
+      color: rgb(254, 127, 65);
+}
+.signup-right{
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+}
+.signup-right h6{
+      font-size: 1.8rem;
+}
+.signup-right form{
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+}
+.signup-right form input{
+      width: 60%;
+      padding: 1rem;
+      border-radius: .4rem;
+      border: none;
+      border: 1px solid rgb(254, 127, 65);
+      font-size: 1.2rem;
+}
+#signup-submit{
+      cursor: pointer;
+      border-radius: .8rem;
+      width: 30%;
+      margin-top: 1rem;
+      color: white;
+      background-color: rgb(254, 127, 65);
+}
+#signup-submit:hover{
+      color: rgb(254, 127, 65);
+      border: 1px solid rgb(254, 127, 65);
+      background-color: white;
+}
+#forgotPassword{
+      text-decoration: none;
+      color: chocolate;
+}

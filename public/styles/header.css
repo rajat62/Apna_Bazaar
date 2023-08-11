@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+*{
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: 'Varela Round', sans-serif;
+}
+.header{
+      display: flex;
+      flex-direction: row;
+      width: 100vw;
+      justify-content: space-between;
+      align-items: center;
+      /* background-color: rgb(254, 127, 65, .6); */
+      height: 8vh;
+      /* color: white; */
+}
+.header h2{
+      padding-left: 3rem;
+      letter-spacing: .1rem;
+}
+.header h2 a{
+      text-decoration: none;
+      color: black;
+      border: none;
+      background-color: white;
+}
+.header ul{   
+      display: flex;
+      flex-direction: row;
+      padding-right: 3rem;
+      /* padding-top: 2rem; */
+}
+.header ul li{
+      list-style: none;
+      padding-right: .5rem;
+      font-size: 1.2rem;
+}
+.header-link{
+      padding: .6rem 1.3rem;
+      font-size: 1rem;
+}
+.header ul li a{
+      color: white;
+      background-color: rgb(254, 127, 65);
+
+      text-decoration: none;
+      border-radius: 1.4rem;
+}
+.header ul li a:hover{
+      color: rgb(254, 127, 65);
+      background-color: white;
+      border: 1px solid rgb(254, 127, 65);
+}
+#header-products{
+      background-color: white;
+      color: rgb(254, 127, 65);
+      
+}
+#user-icon{
+      height: 35px;
+      border-radius: 50%;
+}
+.header-guest{
+      background-color: rgb(254, 127, 65, .7);
+}
+#header-guest-ul{
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+}
+#header-guest-ul select{
+      padding: .6rem 1.3rem;
+      border-radius: 1.2rem;
+      border: none;
+}
+
+#user-div-top{
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+}
+#logoutLink{
+      cursor: pointer;
+}
+#logoutLink:hover{
+      color: white;
+}

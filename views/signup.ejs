@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <link rel="stylesheet" href="/styles/signup.css">
+</head>
+<body>
+      <div class="signup-main">
+            <div class="signup-left">
+                  <div class="signup-left-top">
+                        <h2><a href="/">Shopping App</a></h2>
+                  </div>
+                  <div class="signup-left-bottom">
+                        <h6>Welcome Back!</h6>
+                        <p>To keep connected with us please login</p>
+                        <a href="/users/login">Login</a>
+                  </div>
+            </div>
+
+            <div class="signup-right">
+                  <h6>Create Account</h6>
+                  <form action="/users/addUser" method="post" enctype="multipart/form-data">
+                        <input name="username" placeholder="username"/>
+                        <input name="email" type="email" placeholder="email"/>
+                        <input name="password" type="password" placeholder="password"/>
+                        <input name="confirmpassword" type="password" placeholder="confirm password"/>
+                        <input type="file" name="avatar" />
+                        <input type="submit" id="signup-submit">
+                  </form>
+                  <% if (error) { %>
+                        <p>Message: <%= error %></p>
+                      <% } %>
+                      
+                      
+            </div>
+      </div>
+      
+</body>
+</html>

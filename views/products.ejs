@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles/product.css" />
+  </head>
+  <body>
+    <%- include(loggedIn ? 'header_guest' : 'header', { username: username }) %>
+
+    <div class="product-main">
+      <div class="featured">
+        <h6>Grab upto 30% Off on Selected Mobiles</h6>
+        <button>View</button>
+      </div>
+      <div class="all-products">
+        
+      </div>
+      <div class="load-more">
+        <button id="loadMore">Load More</button>
+      </div>
+    </div>
+    <script>
+      const loadMoreButton = document.getElementById('loadMore');
+      const allproducts = document.querySelector('.all-products');
+      const productMain = document.querySelector('.product-main');
+
+      let currentPage = <%= currentPage %>;
+      const totalPages = <%= total_pages %>;
+  
+      const renderProducts = (data) => {
+        data.forEach((item) => {
+          const singleProduct = document.createElement('div');
+          singleProduct.className = 'single-product';
+  
+          const productImage = document.createElement('img');
+          productImage.src = item.imagelink;
+          productImage.alt = 'product';
+  
+          const productInfo = document.createElement('div');
+          productInfo.className = 'product-information';
+          productInfo.innerHTML = `
+            <h6>${item.name}</h6>
+            <a class="view-details">View Details</a>
+          `;
+
+          const viewDetailsLink = productInfo.querySelector('.view-details');
+          viewDetailsLink.addEventListener('click', () => {
+            const popupDiv = document.createElement('div');
+            popupDiv.innerHTML =`
+              <p>${item.details}<p>
+              <a class='clearpopup'>X</a>
+            ` 
+            popupDiv.className ="showPopup"
+            productMain.appendChild(popupDiv);
+
+            const clearpopupbtn =document.querySelector('.clearpopup');
+            clearpopupbtn.addEventListener('click', ()=>{
+              productMain.removeChild(popupDiv);
+            })
+          });
+
+
+          singleProduct.appendChild(productImage);
+          singleProduct.appendChild(productInfo);
+          allproducts.appendChild(singleProduct);
+        });
+      };
+  
+      renderProducts(<%- JSON.stringify(data) %>);
+  
+      loadMoreButton.addEventListener('click', async () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          const response = await fetch(`/products/getMoreData?page=${currentPage}`);
+          const newProducts = await response.json();
+          renderProducts(newProducts);
+        }
+      });
+    </script>
+  </body>
+</html>
