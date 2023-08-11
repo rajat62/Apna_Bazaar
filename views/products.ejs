@@ -18,18 +18,83 @@
         
       </div>
       <div class="load-more">
-        <button id="loadMore">Load More</button>
+        
       </div>
+
+      
     </div>
     <script>
       const loadMoreButton = document.getElementById('loadMore');
       const allproducts = document.querySelector('.all-products');
       const productMain = document.querySelector('.product-main');
+      const loadMoreDiv = document.querySelector('.load-more');
 
-      let currentPage = <%= currentPage %>;
+      let currentPage = <%= current_page %>;
       const totalPages = <%= total_pages %>;
+      let loggedInFlag =<%= loggedIn %>;
   
+      const checkNextPage = (currentPage) => {
+        const nextPageBtnFlag = document.querySelector('#nextPageBtn');
+
+        if (currentPage < totalPages) {
+          if (nextPageBtnFlag) {
+            nextPageBtnFlag.parentNode.removeChild(nextPageBtnFlag);
+          }
+
+          const nextPageBtn = document.createElement('button');
+          nextPageBtn.innerText = 'Next Page';
+          nextPageBtn.id = 'nextPageBtn';
+          loadMoreDiv.appendChild(nextPageBtn);
+
+          nextPageBtn.addEventListener('click', async () => {
+            if (currentPage < totalPages) {
+              currentPage++;
+              const response = await fetch(`/products/getMoreData?page=${currentPage}`);
+              const newProducts = await response.json();
+              renderProducts(newProducts);
+              checkPrevPage(currentPage);
+              checkNextPage(currentPage);
+            }
+          });
+        } else {
+          if (nextPageBtnFlag) {
+            nextPageBtnFlag.parentNode.removeChild(nextPageBtnFlag);
+          }
+        }
+      };
+
+      const checkPrevPage = (currentPage) => {
+        const prevPageBtnFlag = document.querySelector('#prevPageBtn');
+
+        if (currentPage > 1) {
+          if (prevPageBtnFlag) {
+            prevPageBtnFlag.parentNode.removeChild(prevPageBtnFlag);
+          }
+
+          const prevPageBtn = document.createElement('button');
+          prevPageBtn.innerText = 'Previous Page';
+          prevPageBtn.id = 'prevPageBtn';
+          loadMoreDiv.appendChild(prevPageBtn);
+
+          prevPageBtn.addEventListener('click', async () => {
+            if (currentPage > 1) {
+              currentPage--;
+              const response = await fetch(`/products/getMoreData?page=${currentPage}`);
+              const newProducts = await response.json();
+              renderProducts(newProducts);
+              checkPrevPage(currentPage);
+              checkNextPage(currentPage);
+            }
+          });
+        } else {
+          if (prevPageBtnFlag) {
+            prevPageBtnFlag.parentNode.removeChild(prevPageBtnFlag);
+          }
+        }
+      };
+
       const renderProducts = (data) => {
+        allproducts.innerHTML=''
         data.forEach((item) => {
           const singleProduct = document.createElement('div');
           singleProduct.className = 'single-product';
@@ -42,7 +107,10 @@
           productInfo.className = 'product-information';
           productInfo.innerHTML = `
             <h6>${item.name}</h6>
-            <a class="view-details">View Details</a>
+            <div class="links">
+              <a class="view-details">View Details</a>
+              <a class='cart'>Add to Cart</a>
+            </div>
           `;
 
           const viewDetailsLink = productInfo.querySelector('.view-details');
@@ -61,6 +129,16 @@
             })
           });
 
+          const addToCartBtn = productInfo.querySelector('.cart');
+          addToCartBtn.addEventListener('click', ()=>{
+            if(loggedInFlag){
+              window.location.href="/products/cart"
+            }
+            else{
+              window.alert("You are not loggedin")
+            }
+          })
+
 
           singleProduct.appendChild(productImage);
           singleProduct.appendChild(productInfo);
@@ -69,15 +147,12 @@
       };
   
       renderProducts(<%- JSON.stringify(data) %>);
-  
-      loadMoreButton.addEventListener('click', async () => {
-        if (currentPage < totalPages) {
-          currentPage++;
-          const response = await fetch(`/products/getMoreData?page=${currentPage}`);
-          const newProducts = await response.json();
-          renderProducts(newProducts);
-        }
-      });
+      checkNextPage(currentPage);
+      checkNextPage(currentPage);
+      
+
+      
+     
     </script>
   </body>
 </html>

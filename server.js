@@ -32,7 +32,7 @@ app.get("/", (req, res)=>{
 app.get('/products', async (req, res) => {
   
   try {
-    const loggedIn = req.session.loggedIn;
+    let loggedIn = req.session.loggedIn;
     const username = req.session.username;
     const profile = req.session.profile;
 
@@ -41,13 +41,15 @@ app.get('/products', async (req, res) => {
 
     const totalProducts = await Product.countDocuments();
     const data = await Product.find().skip(skip).limit(PAGE_SIZE);
-
+    if(!req.session.loggedIn){
+      loggedIn=false
+    }
     res.render('products', {
       username,
       data,
-      currentPage: page,
+      current_page: page,
       total_pages: Math.ceil(totalProducts / PAGE_SIZE),
-      loggedIn,
+      loggedIn: loggedIn,
       profile
     });
   } catch (error) {

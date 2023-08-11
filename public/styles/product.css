@@ -51,6 +51,10 @@
       gap: .8rem;
       font-size: .8rem;
 }
+.links{
+      display: flex;
+      gap: .5rem;
+}
 .product-information h6{
       font-size: 1.3rem;
 }
