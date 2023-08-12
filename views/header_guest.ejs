@@ -19,7 +19,9 @@
                         <img src="/<%= profile %>"  id="user-icon"/>
                         <p><%= username%></p>
                   </div>
-                  <img src="/images/cart-icon.png" id="user-icon"/> 
+                  <a href="/products/cart">
+                        <img src="/images/cart-icon.png" id="user-icon" alt="Cart" />
+                  </a> 
                   <a id="logoutLink">Logout</a>
             </ul>
       </div>
@@ -52,6 +54,8 @@
                   event.preventDefault();
                   handleLogout();
             });
+
+            
         </script>
 </body>
 </html>

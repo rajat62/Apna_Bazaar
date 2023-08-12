@@ -130,12 +130,20 @@
           });
 
           const addToCartBtn = productInfo.querySelector('.cart');
-          addToCartBtn.addEventListener('click', ()=>{
-            if(loggedInFlag){
-              window.location.href="/products/cart"
-            }
-            else{
-              window.alert("You are not loggedin")
+          addToCartBtn.addEventListener('click', async ()=>{
+
+            event.preventDefault();
+
+            if (loggedInFlag) {
+              const response  = await fetch(`/products/cart?itemId=${item._id}`, {
+                method: "POST"
+              });
+
+              if(response.ok){
+                console.log("Added to Cart");
+              }
+            } else {
+              window.alert("You are not logged in");
             }
           })
 

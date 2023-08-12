@@ -4,8 +4,25 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Document</title>
+      <link rel="stylesheet" href="/styles/cart.css">
 </head>
 <body>
-      <p>Cart</p>
+
+      <div class="top">
+            <h2>Shopping App</h2>
+            <div>
+                  <a href="/products">Products</a>
+                  <img src="/<%= profile %>"  id="user-icon"/>
+                  <p><%= username%></p>
+            </div>
+      </div>
+      <div id="cart-items">
+           
+      </div>
+      
+      <script>
+            const finalData = <%- JSON.stringify(finalData)%>;
+            console.log(finalData);
+      </script>
 </body>
 </html>
