@@ -16,7 +16,7 @@ export const getCart = async (req, res)=>{
       const profile = req.session.profile;
      
       try {
-        const productsArray = await Cart.find();
+        const productsArray = await Cart.find({username});
         const productsId = productsArray.map((item) => item.productId);
         
         const finalData = await Product.find({
@@ -35,7 +35,9 @@ export const getCart = async (req, res)=>{
 
 export const addToCart = async (req, res)=>{
   const itemId = req.query.itemId;
+  const username= req.session.username;
   const response = await Cart.create({
+    username,
     productId: itemId
   })
   console.log(response);
@@ -45,9 +47,9 @@ export const addToCart = async (req, res)=>{
 
 export const deleteProduct = async (req, res) => {
   const itemId = req.query.itemId;
-  
+  const username= req.session.username;
   try {
-    const response = await Cart.deleteOne({productId: itemId});
+    const response = await Cart.deleteOne({username, productId: itemId});
     console.log(response);
 
     res.send("data deleted successfully");

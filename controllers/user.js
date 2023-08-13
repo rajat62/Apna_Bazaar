@@ -219,9 +219,7 @@ export const changePassword = async (req, res) => {
   const username = req.body.username;
 
   if (newpassword !== confirmpassword) {
-    res.render('resetpassword', { 
-      error: "Confirm password does not match"
-    });
+    res.render('resetpassword');
   } 
   else{
     await User.findOneAndUpdate({ username }, { $set: { password: newpassword } });
