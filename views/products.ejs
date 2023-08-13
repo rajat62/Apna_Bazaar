@@ -11,7 +11,7 @@
 
     <div class="product-main">
       <div class="featured">
-        <h6>Show Among the Best Brands</h6>
+        <h6>Shop Among the Best Brands</h6>
       </div>
       <div class="all-products">
         
@@ -113,6 +113,7 @@
           `;
 
           const viewDetailsLink = productInfo.querySelector('.view-details');
+          viewDetailsLink.style.cursor="pointer";
           viewDetailsLink.addEventListener('click', () => {
             const popupDiv = document.createElement('div');
             popupDiv.innerHTML =`
@@ -129,6 +130,7 @@
           });
 
           const addToCartBtn = productInfo.querySelector('.cart');
+          addToCartBtn.style.cursor="pointer";
           addToCartBtn.addEventListener('click', async ()=>{
 
             event.preventDefault();

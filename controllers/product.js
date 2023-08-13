@@ -58,3 +58,37 @@ export const deleteProduct = async (req, res) => {
 };
 
 
+
+export const addProduct = async(req, res)=>{
+  const profile = req.session.profile;
+  await Product.create(req.body);
+  const data = await Product.find();
+  res.render('admin', {data, profile})
+}
+export const removeProduct = async(req, res)=>{
+  const itemId = req.query.itemId;
+  const profile = req.session.profile;
+
+  try {
+    const response = await Product.deleteOne({_id: itemId});
+    console.log(response);
+    res.send("data deleted successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting product from cart.' });
+  }
+}
+
+export const updateProduct = async (req, res)=>{
+   const itemId = req.query.itemId;
+   const quantity = req.query.quan;
+
+   try {
+      await Product.findOneAndUpdate({_id: itemId}, {$set: {quantity: quantity}});
+      res.send("Updated")
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Unable to update.' });
+    }
+
+}

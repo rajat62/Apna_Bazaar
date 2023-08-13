@@ -86,3 +86,11 @@
 #logoutLink:hover{
       color: white;
 }
+#adminlink{
+      cursor: pointer;
+      text-decoration: none;
+      color: black;
+}
+#adminlink:hover{
+      color: white;
+}

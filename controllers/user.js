@@ -121,7 +121,7 @@ export const addUser = async (req, res) => {
             
             let info = await transporter.sendMail({
               from: `"Test" <${process.env.USER}>`,
-              to: process.env.TO,
+              to: email,
               subject: "Verify to shopping App",
               html: `
               <h1>Hello there, click here to verify</h1>

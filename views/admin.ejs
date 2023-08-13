@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <link rel="stylesheet" href="/styles/header.css">
+      <link rel="stylesheet" href="/styles/admin.css">
+</head>
+<body>
+      <div class="header header-guest">
+            <h2>Shopping App</h2>
+            <ul id="header-guest-ul">
+                  <div id="user-div-top">
+                        <img src="/<%= profile %>"  id="user-icon"/>
+                        <p>Admin</p>
+                  </div>
+                  <a href="/admin" id="adminlink">Admin Panel</a>
+                  <a id="logoutLink">Logout</a>
+            </ul>
+
+      </div>
+      <div class="addProducts">
+            <h3>Add New Product</h3>
+            <form id="productForm" action="/products/addProduct" method="post">
+                  <input type="text" id="name" name="name" required placeholder="name"><br>
+                  <input type="text" id="imagelink" name="imagelink" required placeholder="imagelink"><br>
+                  <input type="number" id="price" name="price" step="0.01" required placeholder="price"><br>
+                  <input type="number" id="quantity" name="quantity" required placeholder="quantity"><br>
+                  <textarea id="details" name="details" rows="4" cols="50" ></textarea><br>
+                  <input type="submit" value="Add Product">
+            </form>
+      </div>
+      <div id="showProducts" >
+            <h3>Existing Products</h3>
+            <div id="products">
+
+            </div>
+      </div>
+      <script>
+            const data  = <%- JSON.stringify(data)%>;
+
+            const products = document.getElementById('products'); 
+            const renderProducts = (data) => {
+                  const productDiv = document.createElement('div');
+                  productDiv.className="productDiv"
+                  productDiv.innerHTML=`
+                        <img src='${data.imagelink}' id='productImage'/>
+                        <p>${data.name}<P>
+                        <p id='productQuan'> Quantity: ${data.quantity}<P>
+                        <button class='btn' id='changeQuan'>Change Quan</button>
+                        <button class='btn' id='deletebtn'>Delete</button>
+                  `
+                  const deleteBtn = productDiv.querySelector('#deletebtn');
+                  deleteBtn.addEventListener('click', async()=>{
+                        const response = await fetch(`/products/admin/removeProduct?itemId=${data._id}`, {
+                        method: 'DELETE' 
+                        });
+                        if (response.ok) {
+                              console.log("deleted successfully");
+                              products.removeChild(productDiv);
+                        } else {
+                              console.error("Logout failed");
+                        }
+                  })
+                  const changeQuan = productDiv.querySelector('#changeQuan');
+                  changeQuan.addEventListener('click', async()=>{
+                        const productQuan = productDiv.querySelector('#productQuan');
+
+                        const productQuantity = parseInt(prompt("Enter the product quantity:"));
+                        const response = await fetch(`/products/admin/updateProduct?itemId=${data._id}&quan=${productQuantity}`, {
+                         method: 'PATCH'
+                        });
+
+                        if (response.ok) {
+                              console.log("Updated successfully ", item.name);
+                              productQuan.innerText=productQuantity;
+                        } else {
+                              console.error("Logout failed");
+                        }
+                  })
+                  products.appendChild(productDiv);
+                  
+            }
+
+            data.forEach(element => {
+                  renderProducts(element);
+            });
+
+            const handleLogout = async () => {
+                  try {
+                        const response = await fetch("/users/logout", {
+                        method: 'POST' 
+                        });
+                        if (response.ok) {
+                              window.location.href = "/"; 
+                        } else {
+                              console.error("Logout failed");
+                        }
+                  } catch (error) {
+                        console.error("An error occurred:", error);
+                  }
+            };
+
+            logoutLink.addEventListener('click', (event) => {
+                  event.preventDefault();
+                  handleLogout();
+            });
+      </script>
+</body>
+</html>
