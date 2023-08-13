@@ -44,3 +44,77 @@ body{
 .top p{
       text-transform: capitalize;
 }
+#cart-items {
+      padding-top: 2rem;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding-left: 2rem;
+}
+.single-product {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+}
+
+.single-product img{
+      width: 300px;
+      height: 300px;
+      object-fit: contain;
+      padding-bottom: 1rem;
+}
+.single-product p{
+      padding-bottom: 1rem;
+}
+.quantityDiv{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: .5rem;
+      padding-bottom: 1rem;
+}
+.quantityDiv button{
+      padding: .5rem .8rem;
+      cursor: pointer;
+      background-color: rgb(124, 234, 163);
+      border: none;
+      color: white;
+      font-weight: 900;
+      border-radius: .3rem;
+}
+.productbuttons button{
+      padding: .4rem .7rem;
+      border-radius: .8rem;
+      border:none;
+      background-color: grey;
+      color: white;
+      cursor: pointer;
+}
+.showPopup{
+      position: absolute;
+      background-color: grey;
+      width: 400px;
+      height: 400px;
+      top: 40%;
+      left: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.6rem;
+      color: white;
+}
+.clearpopup{
+      position: absolute;
+      top: 2%;
+      right: 2%;
+      color: red;
+      background-color: white;
+      padding: .8rem 1.2rem;
+      border-radius: 50%;
+      cursor: pointer;
+}
+#totalDiv{
+      display: flex;
+      justify-content: center;
+      padding: 2rem 0;
+}

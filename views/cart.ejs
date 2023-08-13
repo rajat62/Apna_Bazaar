@@ -1,28 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Document</title>
-      <link rel="stylesheet" href="/styles/cart.css">
-</head>
-<body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles/cart.css" />
+  </head>
+  <body>
       <div class="top">
             <h2>Shopping App</h2>
             <div>
                   <a href="/products">Products</a>
-                  <img src="/<%= profile %>"  id="user-icon"/>
+                  <img src="/<%= profile %>" id="user-icon" />
                   <p><%= username%></p>
             </div>
       </div>
-      <div id="cart-items">
-           
-      </div>
-      
-      <script>
-            const finalData = <%- JSON.stringify(finalData)%>;
-            console.log(finalData);
-      </script>
-</body>
+
+    <div id="cart-items"></div>
+
+    <script>
+                  const cartItemsDiv  = document.getElementById('cart-items');
+                  const totalDiv  = document.getElementById('totalDiv');
+                  let currentQuantity = 0;
+                  const finalData = <%- JSON.stringify(finalData)%>;
+
+                  const renderProducts = (data)=>{
+                        data.forEach(item => {
+
+                        let currentQuantity = localStorage.getItem(`quantity_${item._id}`);
+                        if (currentQuantity === null) {
+                              currentQuantity = 1;
+                              localStorage.setItem(`quantity_${item._id}`, currentQuantity);
+                        } else {
+                              currentQuantity = parseInt(currentQuantity); 
+                        }
+                        
+                        const singleProduct = document.createElement('div');
+                        singleProduct.className = 'single-product';
+
+                        const productImage = document.createElement('img');
+                        productImage.src = item.imagelink;
+                        productImage.alt = 'product';
+
+                        const productName = document.createElement('p');
+                        productName.innerText = item.name;
+                        const productPrice = document.createElement('p');
+                        productPrice.innerText = "Rs " + item.price;
+                        productPrice.setAttribute('data-price', item.price);
+                        const productQuantity = document.createElement('div');
+                        productQuantity.className = 'quantityDiv';
+                        
+                        
+                        productQuantity.innerHTML=`
+                              <p>Quantity</p>
+                              <p id='realQuantity'>${currentQuantity}</p>
+                        `
+                        const addQuantity = document.createElement('button');
+                        
+                        addQuantity.innerText = '+';
+                        addQuantity.addEventListener('click', () => {
+                              if (currentQuantity < item.quantity) {
+                                    currentQuantity++;
+                                    localStorage.setItem(`quantity_${item._id}`, currentQuantity);
+                                    const realQuantity = productQuantity.querySelector('#realQuantity')
+                                    realQuantity.innerText = currentQuantity;
+                              }
+                        });
+                        const removeQuantity = document.createElement('button');
+                        
+                        removeQuantity.innerText = '-';
+                        removeQuantity.addEventListener('click', () => {
+                              if (currentQuantity > 1 ) {
+                                    currentQuantity--;
+                                    localStorage.setItem(`quantity_${item._id}`, currentQuantity);
+                                    const realQuantity = productQuantity.querySelector('#realQuantity')
+                                    realQuantity.innerText = currentQuantity;
+                              }
+                        });
+
+                        productQuantity.appendChild(addQuantity);
+                        productQuantity.appendChild(removeQuantity);
+                       
+
+                        const productButtons = document.createElement('div');
+                        productButtons.className="productbuttons"
+                        productButtons.innerHTML=`
+                              <button class='deleteProduct'>Delete</button>
+                              <button class="view-description">View Desc</button>
+                        `
+                        const viewDescription = productButtons.querySelector('.view-description');
+                        viewDescription.addEventListener('click', () => {
+                              const popupDiv = document.createElement('div');
+                              popupDiv.innerHTML =`
+                              <p>${item.details}<p>
+                              <a class='clearpopup'>X</a>
+                              `
+                              popupDiv.className ="showPopup"
+                              cartItemsDiv.appendChild(popupDiv);
+
+                              const clearpopupbtn =document.querySelector('.clearpopup');
+                              clearpopupbtn.addEventListener('click', ()=>{
+                                    cartItemsDiv.removeChild(popupDiv);
+                              })
+                        });
+                        const deleteProduct = productButtons.querySelector('.deleteProduct');
+                        deleteProduct.addEventListener('click', async () => {
+
+                              const response = await fetch(`/products/delete?itemId=${item._id}`, {
+                              method: 'DELETE',
+                              });
+
+                              if (response.ok) {
+                                    console.log("deleted Successfully");
+                                    cartItemsDiv.removeChild(singleProduct);
+                                    localStorage.removeItem(`quantity_${item._id}`)
+                              } else {
+                              console.error('Product deletion failed');
+                              }
+                        });
+
+
+                        singleProduct.appendChild(productImage);
+                        singleProduct.appendChild(productName);
+                        singleProduct.appendChild(productPrice);
+                        singleProduct.appendChild(productQuantity);
+                        singleProduct.appendChild(productButtons);
+                        cartItemsDiv.appendChild(singleProduct);
+                        });
+                  }
+
+                  renderProducts(finalData);
+                 
+
+    </script>
+  </body>
 </html>

@@ -1,5 +1,6 @@
 import Product from "../Models/product.js";
 import Cart from "../Models/cart.js"
+import mongoose from 'mongoose';
 
 export const getMoreData = async (req, res) => {
   const page = req.query.page;
@@ -21,7 +22,7 @@ export const getCart = async (req, res)=>{
         const finalData = await Product.find({
           _id: { $in: productsId }
         });
-
+        
         req.session.loggedIn
             ? res.render('cart', {loggedIn, username, profile, finalData})
             : res.redirect("/users/login")
@@ -40,3 +41,20 @@ export const addToCart = async (req, res)=>{
   console.log(response);
   res.send("Added")
 }
+
+
+export const deleteProduct = async (req, res) => {
+  const itemId = req.query.itemId;
+  
+  try {
+    const response = await Cart.deleteOne({productId: itemId});
+    console.log(response);
+
+    res.send("data deleted successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting product from cart.' });
+  }
+};
+
+

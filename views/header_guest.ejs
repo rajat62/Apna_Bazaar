@@ -10,11 +10,6 @@
       <div class="header header-guest">
             <h2>Shopping App</h2>
             <ul id="header-guest-ul">
-                  <select id="categorySelect" name="category">
-                        <option value="" disabled selected>Select a category</option>
-                        <option value="fashion">Fashion</option>
-                        <option value="household">Household</option>
-                    </select>
                   <div id="user-div-top">
                         <img src="/<%= profile %>"  id="user-icon"/>
                         <p><%= username%></p>
@@ -22,16 +17,15 @@
                   <a href="/products/cart">
                         <img src="/images/cart-icon.png" id="user-icon" alt="Cart" />
                   </a> 
+                  <% if (username === 'admin') { %>
+                        <a href="/admin">Admin Panel</a>
+                      <% } %>
                   <a id="logoutLink">Logout</a>
+
             </ul>
       </div>
       <script>
-            const categorySelect = document.getElementById('categorySelect');
-        
-            categorySelect.addEventListener('change', function() {
-                const selectedCategory = categorySelect.value;
-                console.log('Selected category:', selectedCategory);
-            });
+            
 
             const logoutLink = document.getElementById('logoutLink');
 

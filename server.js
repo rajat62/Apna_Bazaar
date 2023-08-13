@@ -57,7 +57,9 @@ app.get('/products', async (req, res) => {
     res.status(500).send("Error fetching products");
   }
 });
-
+app.get('/admin', (req, res)=>{
+  req.session.username === 'admin' ? res.render('admin') :res.redirect("/users/login");
+})
 app.use("/products",ProductRouter )
 app.use("/users", UserRouter);
 
