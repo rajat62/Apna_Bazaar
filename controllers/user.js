@@ -1,47 +1,72 @@
 import User from "../Models/user.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken"
-export const loginPage = (req, res) => {
-  req.session.loggedIn
-    ? res.redirect("/products")
-    : res.render("login", { error: null });
+import client from "../helpers/redis_init.js"
+
+export const loginPage = async (req, res) => {
+
+  let userData = await client.HGET("user:1", "userData");
+  userData = JSON.parse(userData);
+  if (userData) {
+    if (userData.loggedIn)
+      res.redirect("/products")
+  } else {
+    res.render("login", { error: null });
+  }
+
+
 };
 
-export const signupPage = (req, res) => {
-  req.session.loggedIn
-    ? res.redirect("/products")
-    : res.render("signup", { error: null });
+export const signupPage = async (req, res) => {
+
+  let userData = await client.HGET("user:1", "userData");
+  userData = JSON.parse(userData);
+
+  if (userData) {
+    if (userData.loggedIn)
+      res.redirect("/products")
+  } else {
+    res.render("signup", { error: null });
+  }
+
 };
-export const forgotPassword = (req, res) => {
-  req.session.loggedIn
-    ? res.redirect("/products")
-    : res.render("forgotpassword", {message: null});
+export const forgotPassword = async (req, res) => {
+
+  let userData = await client.HGET("user:1", "userData");
+  userData = JSON.parse(userData);
+
+  if (userData) {
+    if (userData.loggedIn)
+      res.redirect("/products")
+  } else {
+    res.render("forgotpassword", { message: null });
+  }
 };
 export const forgotPasswordPost = async (req, res) => {
   const email = req.body.email;
 
-  const oldUser = await User.findOne({email});
-  if(!oldUser){
-    res.render('forgotpassword', {message :"User does not exist"})
+  const oldUser = await User.findOne({ email });
+  if (!oldUser) {
+    res.render('forgotpassword', { message: "User does not exist" })
   }
-  else{
+  else {
 
     const token = jwt.sign({ email }, process.env.SECRET, {
-      expiresIn: '1d', 
+      expiresIn: '1d',
     })
     const verificationLink = `http://localhost:8000/users/resetpassword?token=${token}`;
     async function main() {
-           
+
       let transporter = nodemailer.createTransport({
-        host: process.env.HOST, 
-        port: process.env.MAILPORT, 
-        secure: true, 
+        host: process.env.HOST,
+        port: process.env.MAILPORT,
+        secure: true,
         auth: {
-          user: process.env.USER, 
-          pass: process.env.PASS, 
+          user: process.env.USER,
+          pass: process.env.PASS,
         },
       });
-      
+
       let info = await transporter.sendMail({
         from: `"Test" <${process.env.USER}>`,
         to: email,
@@ -51,12 +76,12 @@ export const forgotPasswordPost = async (req, res) => {
         <a href='${verificationLink}'>Link</a>
         `,
       });
-    
+
       console.log(info.messageId);
     }
-    
+
     main()
-    res.render("forgotpassword", {message: "An email is sent to you"})
+    res.render("forgotpassword", { message: "An email is sent to you" })
   }
 };
 
@@ -70,15 +95,15 @@ export const addUser = async (req, res) => {
   let error = '';
   let success = '';
   try {
-    
+
     if (!username || !password || password.length < 8) {
       error = "Password must be at least 8 characters long";
       return res.render("signup", { error, success: "something" });
     }
 
     if (!/[A-Z]/.test(password)) {
-      error = "Password must contain at least one capital letter" ;
-      return res.render("signup", { error, success: "something"});
+      error = "Password must contain at least one capital letter";
+      return res.render("signup", { error, success: "something" });
     }
 
     if (!/\d/.test(password)) {
@@ -93,49 +118,49 @@ export const addUser = async (req, res) => {
 
     if (password !== confirmPassword) {
       res.render("signup", { error: "Confirm password does not match", success: "something" });
-    } 
+    }
     else {
       let oldUser = await User.findOne({ username });
-  
+
       if (oldUser) {
         error = "User already exists";
-        res.render("signup", { error, success: "something"});
+        res.render("signup", { error, success: "something" });
       } else {
-        
-          const token = jwt.sign({ username, profilePic, email, password }, process.env.SECRET, {
-            expiresIn: '1d', 
-          })
-          const verificationLink = `http://localhost:8000/users/verify?token=${token}`;
 
-          async function main() {
-         
-            let transporter = nodemailer.createTransport({
-              host: process.env.HOST, 
-              port: process.env.MAILPORT, 
-              secure: true, 
-              auth: {
-                user: process.env.USER, 
-                pass: process.env.PASS, 
-              },
-            });
-            
-            let info = await transporter.sendMail({
-              from: `"Test" <${process.env.USER}>`,
-              to: email,
-              subject: "Verify to shopping App",
-              html: `
+        const token = jwt.sign({ username, profilePic, email, password }, process.env.SECRET, {
+          expiresIn: '1d',
+        })
+        const verificationLink = `http://localhost:8000/users/verify?token=${token}`;
+
+        async function main() {
+
+          let transporter = nodemailer.createTransport({
+            host: process.env.HOST,
+            port: process.env.MAILPORT,
+            secure: true,
+            auth: {
+              user: process.env.USER,
+              pass: process.env.PASS,
+            },
+          });
+
+          let info = await transporter.sendMail({
+            from: `"Test" <${process.env.USER}>`,
+            to: email,
+            subject: "Verify to shopping App",
+            html: `
               <h1>Hello there, click here to verify</h1>
               <a href='${verificationLink}'>Link</a>
               `,
-            });
-          
-            console.log(info.messageId);
-          }
-          
-          main()
-          
-          success=  'Signup successful. Please check your email for verification link.'
-          res.render('signup', { error: "Successful, check mail"});
+          });
+
+          console.log(info.messageId);
+        }
+
+        main()
+
+        success = 'Signup successful. Please check your email for verification link.'
+        res.render('signup', { error: "Successful, check mail" });
       }
     }
   } catch (err) {
@@ -154,33 +179,51 @@ export const userLogin = async (req, res) => {
     let oldUser = await User.findOne({ username });
 
     if (oldUser) {
-      if(oldUser.password === password){
-        req.session.username = username;
-        req.session.loggedIn = true;
-        req.session.profile = oldUser.profilePic;
+      if (oldUser.password === password) {
+
+
+        const user1Data = {
+          'username': username,
+          'loggedIn': true,
+          'profilepic': oldUser.profilePic
+        };
+
+        await client.HSET('user:1', 'userData', JSON.stringify(user1Data), (err, reply) => {
+          if (err) {
+            console.error("Error setting keys:", err);
+          } else {
+            console.log("Key set successfully:", reply);
+          }
+        });
+
+
+        // req.session.username = username;
+        // req.session.loggedIn = true;
+        // req.session.profile = oldUser.profilePic;
         res.redirect("/products");
       }
-      else{
-        res.render("login", {error: "Password does not match"});
+      else {
+        res.render("login", { error: "Password does not match" });
       }
-    } 
-    else{
-      res.render("login", {error: "User does ot exist"});
+    }
+    else {
+      res.render("login", { error: "User does ot exist" });
     }
   } catch (err) {
     console.log(err);
     return;
   }
 };
-export const logoutUser = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Error while destroying session:", err);
-      res.status(500).json({ message: "Error occurred while logging out" });
-    } else {
-      res.redirect("/");
-    }
-  });
+export const logoutUser = async (req, res) => {
+
+  const status = await client.HDEL('user:1', 'userData');
+  console.log(status)
+  if(status== 1){
+    res.redirect('/');
+  }else{
+    res.status(500).json({ message: "Error occurred while logging out" });
+  }
+
 };
 
 export const verifyUser = async (req, res) => {
@@ -188,19 +231,34 @@ export const verifyUser = async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET);
-    req.session.username = decoded.username;
-    req.session.loggedIn = true;
-    req.session.profile = decoded.profilePic;
+
+    // req.session.username = decoded.username;
+    // req.session.loggedIn = true;
+    // req.session.profile = decoded.profilePic;
+
+    const user1Data = {
+      'username': decoded.username,
+      'loggedIn': true,
+      'profilepic': decoded.profilePic
+    };
+
+    await client.HSET('user:1', 'userData', JSON.stringify(user1Data), (err, reply) => {
+      if (err) {
+        console.error("Error setting keys:", err);
+      } else {
+        console.log("Key set successfully:", reply);
+      }
+    });
     const email = decoded.email;
 
     await User.create({
       username: decoded.username,
-      email:email,
+      email: email,
       password: decoded.password,
       profilePic: decoded.profilePic
     })
 
-    res.redirect('/products'); 
+    res.redirect('/products');
   } catch (error) {
     res.status(400).send('Invalid token');
   }
@@ -210,7 +268,7 @@ export const resetPassword = async (req, res) => {
   const token = req.query.token;
   const decoded = jwt.verify(token, process.env.SECRET);
   const email = decoded.email;
-  res.render('resetpassword', {email});
+  res.render('resetpassword', { email });
 };
 
 export const changePassword = async (req, res) => {
@@ -220,8 +278,8 @@ export const changePassword = async (req, res) => {
 
   if (newpassword !== confirmpassword) {
     res.render('resetpassword');
-  } 
-  else{
+  }
+  else {
     await User.findOneAndUpdate({ username }, { $set: { password: newpassword } });
     res.redirect('/users/login');
   }

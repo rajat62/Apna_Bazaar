@@ -1,6 +1,6 @@
 import Product from "../Models/product.js";
 import Cart from "../Models/cart.js"
-import mongoose from 'mongoose';
+import client from "../helpers/redis_init.js";
 
 export const getMoreData = async (req, res) => {
   const page = req.query.page;
@@ -11,10 +11,13 @@ export const getMoreData = async (req, res) => {
 };
 
 export const getCart = async (req, res)=>{
-      const loggedIn = req.session.loggedIn;
-      const username = req.session.username;
-      const profile = req.session.profile;
-     
+      
+  let userData = await client.HGET("user:1", "userData");
+  userData = JSON.parse(userData)
+  const loggedIn = userData.loggedIn;
+  const username = userData.username;
+  const profile = userData.profilepic;
+
       try {
         const productsArray = await Cart.find({username});
         const productsId = productsArray.map((item) => item.productId);
@@ -23,7 +26,7 @@ export const getCart = async (req, res)=>{
           _id: { $in: productsId }
         });
         
-        req.session.loggedIn
+        loggedIn
             ? res.render('cart', {loggedIn, username, profile, finalData})
             : res.redirect("/users/login")
 
@@ -35,7 +38,11 @@ export const getCart = async (req, res)=>{
 
 export const addToCart = async (req, res)=>{
   const itemId = req.query.itemId;
-  const username= req.session.username;
+  
+  let userData = await client.HGET("user:1", "userData");
+  userData = JSON.parse(userData)
+  const username = userData.username;
+  
   const response = await Cart.create({
     username,
     productId: itemId
@@ -47,7 +54,11 @@ export const addToCart = async (req, res)=>{
 
 export const deleteProduct = async (req, res) => {
   const itemId = req.query.itemId;
-  const username= req.session.username;
+
+  let userData = await client.HGET("user:1", "userData");
+  userData = JSON.parse(userData)
+  const username = userData.username;
+  
   try {
     const response = await Cart.deleteOne({username, productId: itemId});
     console.log(response);
@@ -62,14 +73,15 @@ export const deleteProduct = async (req, res) => {
 
 
 export const addProduct = async(req, res)=>{
-  const profile = req.session.profile;
+  let userData = await client.HGET("user:1", "userData");
+  userData = JSON.parse(userData)
+  const profile = userData.profilepic
   await Product.create(req.body);
   const data = await Product.find();
   res.render('admin', {data, profile})
 }
 export const removeProduct = async(req, res)=>{
   const itemId = req.query.itemId;
-  const profile = req.session.profile;
 
   try {
     const response = await Product.deleteOne({_id: itemId});

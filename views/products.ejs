@@ -8,7 +8,7 @@
   </head>
   <body>
     <%- include(loggedIn ? 'header_guest' : 'header', { username: username }) %>
-
+    <%loggedIn%>
     <div class="product-main">
       <div class="featured">
         <h6>Shop Among the Best Brands</h6>
@@ -28,10 +28,10 @@
       const productMain = document.querySelector('.product-main');
       const loadMoreDiv = document.querySelector('.load-more');
 
-      let currentPage = <%= current_page %>;
-      const totalPages = <%= total_pages %>;
-      let loggedInFlag =<%= loggedIn %>;
-  
+      let currentPage = "<%= current_page %>";
+      const totalPages = "<%= total_pages %>";
+      let loggedInFlag ="<%= loggedIn %>";
+      console.log(loggedInFlag)
       const checkNextPage = (currentPage) => {
         const nextPageBtnFlag = document.querySelector('#nextPageBtn');
 
